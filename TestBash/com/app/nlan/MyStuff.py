@@ -1,36 +1,40 @@
-import csv
-from itertools import groupby
+import os
+import zipfile
+# import rarfile
 
 
 class MyStuff(object):
 
-    def __init__(self):
-        self.tangerine = "And now a thousand years between"
+    # def unrar(self, dpath, xpath):
+    #         for rar in os.listdir(dpath):
+    #             filepath = os.path.join(dpath, rar)
+    #             if not os.path.isfile(filepath):
+    #                 self.unrar(filepath, filepath)
+    #                 continue
+    #             for rar in os.listdir(dpath):
+    #                 if rarfile.is_rarfile(filepath):
+    #                     with rarfile.RarFile(filepath) as opened_rar:
+    #                         for f in opened_rar.infolist():
+    #                             print (f.filename, f.file_size)
+    #                             opened_rar.extractall(xpath)
+
+    def unzip(self, dpath, xpath):
+            for zip in os.listdir(dpath):
+                filepath = os.path.join(dpath, zip)
+                if not os.path.isfile(filepath):
+                    self.unzip(filepath, filepath)
+                    continue
+                for rar in os.listdir(dpath):
+                    if zipfile.is_zipfile(filepath):
+                        with zipfile.ZipFile(filepath) as opened_zip:
+                            for f in opened_zip.infolist():
+                                print (f.filename, f.file_size)
+                                opened_zip.extractall(xpath)
 
     def execute(self):
-        BOARD_SIZE = 8
+        xpath = "/mnt/d/Vuze Downloads/Series"
+        dpath = "/mnt/d/Vuze Downloads/Series"
+        # self.unrar(dpath, xpath)
+        self.unzip(dpath, xpath)
 
-        def under_attack(col, queens):
-            left = right = col
-
-            for r, c in reversed(queens):
-                left, right = left - 1, right + 1
-
-                if c in (left, col, right):
-                    return True
-            return False
-
-        def solve(n):
-            if n == 0:
-                return [[]]
-
-            smaller_solutions = solve(n - 1)
-
-            return [solution + [(n, i + 1)]
-                    for i in xrange(BOARD_SIZE)
-                    for solution in smaller_solutions
-                    if not under_attack(i + 1, solution)]
-
-        for answer in solve(BOARD_SIZE):
-            print answer
 
